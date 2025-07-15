@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Track Shipment - BOLTCOURIER</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('bg-cargo.jpg') no-repeat center center/cover;
+      margin: 0;
+      padding: 0;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .tracking-box {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 16px;
+      border-radius: 5px;
+      border: none;
+    }
+    button {
+      background: #ff9900;
+      color: white;
+      cursor: pointer;
+    }
+    #result, #error {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 5px;
+      display: none;
+    }
+    #result {
+      background: #e0ffe0;
+      border-left: 5px solid green;
+      color: black;
+    }
+    #error {
+      background: #ffe0e0;
+      border-left: 5px solid red;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+  <div class="tracking-box">
+    <h2>Track Your Shipment</h2>
+    <input type="text" id="trackingInput" placeholder="Enter tracking number">
+    <button onclick="trackShipment()">Track</button>
+    <div id="result"></div>
+    <div id="error"></div>
+  </div>
+
+  <script>
+    function trackShipment() {
+      const trackingID = document.getElementById('trackingInput').value.trim().toUpperCase();
+      const resultBox = document.getElementById('result');
+      const errorBox = document.getElementById('error');
+
+      resultBox.style.display = 'none';
+      errorBox.style.display = 'none';
+
+      if (!trackingID) {
+        errorBox.textContent = 'Please enter a tracking number.';
+        errorBox.style.display = 'block';
+        return;
+      }
+
+      fetch('https://script.google.com/macros/s/AKfycbwQIVkMJlkphyuAS0MSysZ-wzQvsRb2Wxt2jmayd_s-L7YzJSlUhDo1969JoH5mJZM1hg/exec?tracking=' + encodeURIComponent(trackingID))
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            errorBox.textContent = data.error;
+            errorBox.style.display = 'block';
+          } else {
+            resultBox.innerHTML = `
+              ✅ <strong>${trackingID}</strong><br>
+              Status: <strong>${data["Status"]}</strong><br>
+              Last Updated: <em>${data["Last Updated"]}</em>
+            `;
+            resultBox.style.display = 'block';
+          }
+        })
+        .catch(error => {
+          errorBox.textContent = 'An error occurred. Please try again.';
+          errorBox.style.display = 'block';
+        });
+    }
+  </script>
+</body>
+</html>

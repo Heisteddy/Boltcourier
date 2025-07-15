@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BOLTCOURIER</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      box-sizing: border-box;
+      background: #f4f4f4;
+      color: #333;
+      scroll-behavior: smooth;
+    }
+
+    html {
+      scroll-padding-top: 80px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      background: #001f3f;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 1000;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-section img {
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .logo-section h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+    }
+
+    nav a {
+      color: white;
+      margin: 0 12px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .hero {
+      padding: 60px 20px;
+      background: url('bg-cargo.jpg') no-repeat center center/cover;
+      text-align: center;
+      color: white;
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .tracking-box {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 30px;
+      border-radius: 10px;
+      display: inline-block;
+      max-width: 400px;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .tracking-box input,
+    .tracking-box button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 16px;
+      border-radius: 5px;
+      border: none;
+    }
+
+    .tracking-box button {
+      background: #ff9900;
+      color: white;
+      cursor: pointer;
+    }
+
+    #result, #error {
+      margin-top: 15px;
+      padding: 20px;
+      border-radius: 10px;
+      display: none;
+    }
+
+    #result {
+      background: white;
+      border: 2px solid #00cc66;
+      color: #222;
+      font-size: 16px;
+      text-align: left;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      line-height: 1.6;
+    }
+
+    #result strong {
+      color: #001f3f;
+    }
+
+    .status-badge {
+      display: inline-block;
+      background-color: #0074D9;
+      color: white;
+      padding: 4px 10px;
+      font-size: 14px;
+      border-radius: 15px;
+      margin-top: 8px;
+    }
+
+    #error {
+      background: #ffe0e0;
+      border-left: 5px solid red;
+    }
+
+    #loading {
+      color: white;
+      margin-top: 10px;
+      display: none;
+    }
+
+    #quote {
+      padding: 60px 20px;
+      background: linear-gradient(135deg, #001f3f, #0074D9);
+      color: white;
+      text-align: center;
+    }
+
+    #quote h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    #quote form {
+      max-width: 500px;
+      margin: auto;
+    }
+
+    #quote input,
+    #quote textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    #quote button {
+      background: #ff9900;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    /* ✅ ABOUT US Section */
+    #about {
+      padding: 60px 20px;
+      background: linear-gradient(135deg, #0074D9, #00bcd4);
+      color: white;
+      text-align: center;
+    }
+
+    #about h2 {
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+
+    #about .about-summary {
+      max-width: 800px;
+      margin: 0 auto 30px;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .about-stats {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin: 40px 0;
+    }
+
+    .about-stats .stat {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px 25px;
+      border-radius: 10px;
+      min-width: 200px;
+      font-size: 18px;
+      font-weight: 500;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .about-stats .stat strong {
+      font-size: 24px;
+      display: block;
+      color: #fff;
+      margin-bottom: 5px;
+    }
+
+    #about img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin-top: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    /* ✅ TESTIMONIAL Section */
+    #testimonials {
+      padding: 60px 20px;
+      background: #cfe9ff;
+    }
+
+    .testimonial-heading {
+      text-align: center;
+      color: white;
+      font-size: 28px;
+      margin-bottom: 30px;
+    }
+
+    .testimonial-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 25px;
+    }
+
+    .testimonial-box {
+      width: 300px;
+      padding: 20px;
+      border-radius: 10px;
+      color: white;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .testimonial-box:hover {
+      transform: translateY(-5px);
+    }
+
+    .testimonial-box p {
+      font-style: italic;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .testimonial-box h4 {
+      margin: 0;
+      font-weight: normal;
+      display: flex;
+      align-items: center;
+    }
+
+    .testimonial-box .client-name {
+      color: white;
+      font-weight: bold;
+    }
+
+    /* ✅ FAQ SECTION */
+    #faq {
+      padding: 60px 20px;
+      background: #f2f6ff;
+      color: #001f3f;
+    }
+
+    #faq h2 {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 40px;
+    }
+
+    .faq-item {
+      max-width: 800px;
+      margin: 0 auto 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      padding: 20px;
+    }
+
+    .faq-item h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #0074D9;
+    }
+
+    .faq-item p {
+      font-size: 16px;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-section">
+      <img src="bolt-logo.png" alt="BoltCourier Logo">
+      <h1>BoltCourier</h1>
+    </div>
+    <nav>
+  <a href="index.html">Home</a>
+  <a href="#quote">Quote</a>
+  <a href="#about">About</a>
+  <select id="language-selector" onchange="changeLanguage()" style="padding: 5px; border-radius: 4px; border: none; font-weight: 500;">
+    <option value="en">🇬🇧 English</option>
+    <option value="fr">🇫🇷 Français</option>
+    <option value="es">🇪🇸 Español</option>
+    <option value="zh">🇨🇳 中文</option>
+  </select>
+</nav>
+  </header>
+
+  <section class="hero" id="track">
+    <h2>Streamline Your Shipping with Our Cargo Services</h2>
+    <div class="tracking-box">
+      <input type="text" id="trackingInput" placeholder="Enter your tracking number">
+      <button onclick="trackShipment()">Track</button>
+      <div id="result"></div>
+      <div id="error"></div>
+      <div id="loading">⏳ Tracking... Please wait</div>
+    </div>
+  </section>
+
+  <section id="quote">
+    <h2>Request a Shipping Quote</h2>
+    <form action="https://formsubmit.co/support@boltcouriersenders.com" method="POST">
+      <input type="text" name="name" placeholder="Your Name" required>
+      <input type="email" name="email" placeholder="Your Email" required>
+      <input type="text" name="pickup" placeholder="Pickup Address" required>
+      <input type="text" name="delivery" placeholder="Delivery Address" required>
+      <textarea name="details" placeholder="Package details..." rows="4" required></textarea>
+
+      <input type="hidden" name="_next" value="thankyou.html">
+      <input type="hidden" name="_captcha" value="false">
+
+      <button type="submit">Submit Quote</button>
+    </form>
+  </section>
+
+  <section id="about">
+    <h2>About Us</h2>
+    <p class="about-summary">
+      BoltCourier has proudly served clients around the world for over a decade, offering reliable, fast, and efficient shipping solutions.
+      We are proud recipients of the <strong>International Logistics Association’s Excellence Award</strong>—a recognition of our innovation, reliability, and client satisfaction.
+    </p>
+
+    <div class="about-stats">
+      <div class="stat"><strong>12+ Years</strong>Experience</div>
+      <div class="stat"><strong>26,000+</strong>Happy Customers</div>
+      <div class="stat"><strong>15</strong>Industry Awards</div>
+    </div>
+
+    <img src="https://images.unsplash.com/photo-1610878180933-11b9605f7811?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
+         alt="BoltCourier Cargo and Logistics">
+  </section>
+
+  <section id="testimonials">
+    <h2 class="testimonial-heading">What Our Clients Say About Us</h2>
+    <div class="testimonial-container">
+      <div class="testimonial-box" style="background: #4A90E2;">
+        <p>"BoltCourier has been a game-changer for our logistics. Fast, reliable, and always on point."</p>
+        <h4><img src="https://flagcdn.com/gb.svg" width="20"> <span class="client-name">Emily R., London, UK</span></h4>
+      </div>
+      <div class="testimonial-box" style="background: #50E3C2;">
+        <p>"The customer service and delivery speed are unmatched. Highly recommend BoltCourier!"</p>
+        <h4><img src="https://flagcdn.com/es.svg" width="20"> <span class="client-name">Carlos M., Madrid, Spain</span></h4>
+      </div>
+      <div class="testimonial-box" style="background: #F5A623;">
+        <p>"From Canada to the world—BoltCourier delivers with care and speed. Impressive work!"</p>
+        <h4><img src="https://flagcdn.com/ca.svg" width="20"> <span class="client-name">Sophie L., Toronto, Canada</span></h4>
+      </div>
+    </div>
+  </section>
+<!-- ✅ SERVICES SECTION -->
+<section id="services">
+  <h2 style="text-align:center; font-size:32px; color:white; margin-bottom:30px;">Our Services</h2>
+  <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:30px; padding:0 20px; max-width:1100px; margin:auto;">
+    <div style="background:rgba(255,255,255,0.05); color:white; padding:25px; border-radius:10px; width:300px; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+      <h3 style="color:#ffcc00;">🚚 Express Delivery</h3>
+      <p>Fast and reliable delivery for time-sensitive shipments within city and across states.</p>
+    </div>
+    <div style="background:rgba(255,255,255,0.05); color:white; padding:25px; border-radius:10px; width:300px; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+      <h3 style="color:#ffcc00;">🌍 International Shipping</h3>
+      <p>Door-to-door global logistics solutions to over 190 countries with customs support.</p>
+    </div>
+    <div style="background:rgba(255,255,255,0.05); color:white; padding:25px; border-radius:10px; width:300px; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+      <h3 style="color:#ffcc00;">🏢 Business Logistics</h3>
+      <p>Custom solutions for eCommerce, retail, and enterprise logistics with tracking APIs.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  #services {
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #001f3f, #0074D9);
+    text-align: center;
+  }
+</style>
+  <!-- ✅ FAQ SECTION -->
+  <section id="faq">
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-container">
+
+    <div class="faq-item">
+      <h3>📦 How long does delivery take?</h3>
+      <p>Delivery times vary based on the destination, but we offer same-day, next-day, and international shipping services with real-time tracking.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>💼 Can I ship internationally?</h3>
+      <p>Yes! BoltCourier ships worldwide. We ensure customs clearance and deliver to over 190 countries.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>💳 What payment methods do you accept?</h3>
+      <p>We accept major credit/debit cards, bank transfers, and mobile payments securely through our portal.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>🔒 Is my shipment insured?</h3>
+      <p>Absolutely. All packages are insured based on the declared value. Premium insurance options are also available.</p>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  #faq {
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #001f3f, #0074D9); /* matches homepage theme */
+    color: white;
+    text-align: center;
+  }
+
+  #faq h2 {
+    font-size: 28px;
+    margin-bottom: 30px;
+    color: white;
+  }
+
+  .faq-container {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  .faq-item {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+
+  .faq-item h3 {
+    margin-top: 0;
+    color: #ffcc00;
+    font-size: 20px;
+  }
+
+  .faq-item p {
+    font-size: 16px;
+    color: #f0f0f0;
+    line-height: 1.6;
+  }
+</style>
+  <script>
+    function trackShipment() {
+      const trackingID = document.getElementById('trackingInput').value.trim().toUpperCase();
+      const resultBox = document.getElementById('result');
+      const errorBox = document.getElementById('error');
+      const loadingBox = document.getElementById('loading');
+
+      resultBox.style.display = 'none';
+      errorBox.style.display = 'none';
+      loadingBox.style.display = 'block';
+
+      if (!trackingID) {
+        errorBox.textContent = 'Please enter a tracking number.';
+        errorBox.style.display = 'block';
+        loadingBox.style.display = 'none';
+        return;
+      }
+
+      fetch('https://script.google.com/macros/s/AKfycbwQIVkMJlkphyuAS0MSysZ-wzQvsRb2Wxt2jmayd_s-L7YzJSlUhDo1969JoH5mJZM1hg/exec?tracking=' + encodeURIComponent(trackingID))
+        .then(response => response.json())
+        .then(data => {
+          loadingBox.style.display = 'none';
+
+          if (data.error) {
+            errorBox.textContent = data.error;
+            errorBox.style.display = 'block';
+          } else {
+            let status = data["Status"];
+            let statusIcon = "📦";
+
+            if (status.toLowerCase().includes("transit")) statusIcon = "🚚";
+            else if (status.toLowerCase().includes("delivered")) statusIcon = "✅";
+            else if (status.toLowerCase().includes("pending") || status.toLowerCase().includes("not found")) statusIcon = "❌";
+
+            resultBox.innerHTML = `
+              <div>
+                <strong>📦 Tracking ID:</strong> ${trackingID}<br>
+                <strong>Status:</strong> <span class="status-badge">${statusIcon} ${status}</span><br>
+                <strong>⏰ Last Updated:</strong> <em>${data["Last Updated"]}</em>
+              </div>
+            `;
+            resultBox.style.display = 'block';
+          }
+        })
+        .catch(error => {
+          loadingBox.style.display = 'none';
+          errorBox.textContent = 'An error occurred. Please try again.';
+          errorBox.style.display = 'block';
+        });
+    }
+  </script>
+ <!-- ✅ Certifications & Partners Section -->
+<section id="certifications" style="padding: 60px 20px; background: #87b5e3; text-align: center;">
+  <h2 style="font-size: 30px; margin-bottom: 30px; color: #001f3f;">Our Certifications & Logistics Partners</h2>
+
+  <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 30px;">
+    <div style="flex: 1 1 150px; max-width: 150px;">
+      <img src="cert1.png" alt="ISO Certification" style="width: 100%; max-height: 100px; object-fit: contain;">
+    </div>
+    <div style="flex: 1 1 150px; max-width: 150px;">
+      <img src="cert2.png" alt="FedEx Partner" style="width: 100%; max-height: 100px; object-fit: contain;">
+    </div>
+    <div style="flex: 1 1 150px; max-width: 150px;">
+      <img src="cert3.png" alt="UPS Partner" style="width: 100%; max-height: 100px; object-fit: contain;">
+    </div>
+    <div style="flex: 1 1 150px; max-width: 150px;">
+      <img src="cert4.png" alt="IATA Certified" style="width: 100%; max-height: 100px; object-fit: contain;">
+    </div>
+  </div>
+</section>
+
+<style>
+  #certifications {
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #001f3f, #0074D9);
+    text-align: center;
+    color: rgb(128, 135, 236);
+  }
+
+  #certifications h2 {
+    font-size: 30px;
+    margin-bottom: 40px;
+    color: #ffcc00;
+  }
+
+  .cert-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+  }
+
+  .cert-grid img {
+    width: 150px;
+    max-width: 100%;
+    height: auto;
+    filter: brightness(0) invert(1);
+    transition: transform 0.3s ease, filter 0.3s ease;
+  }
+
+  .cert-grid img:hover {
+    transform: scale(1.05);
+    filter: brightness(1) invert(0);
+  }
+</style>
+
+<footer>
+  <div class="footer-container">
+    <p>&copy; 2025 BoltCourier. All rights reserved.</p>
+    <p>Powered by <strong>BoltCourier Tech Solutions</strong></p>
+    
+    <p>
+      <a href="#track">Track</a> |
+      <a href="#quote">Get Quote</a> |
+      <a href="#about">About</a> |
+      <a href="#faq">FAQ</a>
+    </p>
+
+    <p class="contact-email">
+      📧 <a href="mailto:boltcouriershipping@oemails.com">boltcouriershipping@oemails.com</a>
+    </p>
+  </div>
+</footer>
+
+<style>
+  footer {
+    background: #001f3f;
+    color: white;
+    padding: 30px 20px;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .footer-container p {
+    margin: 5px 0;
+  }
+
+  .footer-container a {
+    color: #ff9900;
+    text-decoration: none;
+    margin: 0 5px;
+  }
+
+  .footer-container a:hover {
+    text-decoration: underline;
+  }
+
+  .contact-email {
+    margin-top: 10px;
+    font-size: 15px;
+  }
+
+  .contact-email a {
+    color: #ffcc00;
+    font-weight: 500;
+  }
+</style>
+<!-- 🔝 Back to Top Button -->
+<button id="backToTop" title="Go to top">↑</button>
+
+<script>
+  // Show the button after scrolling down 100px
+  window.onscroll = function() {
+    const btn = document.getElementById("backToTop");
+    btn.style.display = (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) ? "block" : "none";
+  };
+
+  // Scroll to top when clicked
+  document.getElementById("backToTop").onclick = function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+</script>
+
+<style>
+  #backToTop {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #ff9900;
+    color: white;
+    border: none;
+    padding: 12px 16px;
+    font-size: 20px;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    cursor: pointer;
+    display: none;
+    z-index: 999;
+    transition: background 0.3s;
+  }
+
+  #backToTop:hover {
+    background-color: #e68a00;
+  }
+</style>
+
+<script>
+  function changeLanguage() {
+    const lang = document.getElementById("language-selector").value;
+    alert("Language switched to: " + lang + " (translation coming soon)");
+    // Future: Load content or redirect based on language
+  }
+</script>
+
+</body>
+</html>
